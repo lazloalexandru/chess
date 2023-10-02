@@ -1,0 +1,1 @@
+g++ -o build/Main/my_project build/Main/src/chessboard.o build/Main/src/main.o

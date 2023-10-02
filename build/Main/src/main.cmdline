@@ -1,0 +1,1 @@
+g++ -c -MD -MF build/Main/src/main.d -Iinclude -Iinclude/etl-master/include -Iinclude\etl-master\include\etl\private -o build/Main/src/main.o src/main.cpp

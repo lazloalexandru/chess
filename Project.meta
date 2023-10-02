@@ -1,0 +1,22 @@
+Project default: Main {
+
+  RequiredBakeVersion minimum: "2.72.0"
+
+  Responsible {
+    Person "sandor"
+  }
+
+  CustomConfig IncludeOnly {
+    IncludeDir include, inherit: true
+  }
+
+  ExecutableConfig Main {
+    Files "src/**/*.cpp"
+    Dependency config: IncludeOnly
+    DefaultToolchain GCC
+
+    IncludeDir "include/etl-master/include/", inject: front
+    IncludeDir "include\etl-master\include\etl\private", inject: front
+  }
+
+}
