@@ -14,9 +14,6 @@ Project default: Main {
     Files "src/**/*.cpp"
     Dependency config: IncludeOnly
     DefaultToolchain GCC
-
-    IncludeDir "include/etl-master/include/", inject: front
-    IncludeDir "include\etl-master\include\etl\private", inject: front
   }
 
 }

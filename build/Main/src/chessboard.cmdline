@@ -1,1 +1,1 @@
-g++ -c -MD -MF build/Main/src/chessboard.d -Iinclude -Iinclude/etl-master/include -Iinclude\etl-master\include\etl\private -o build/Main/src/chessboard.o src/chessboard.cpp
+g++ -c -MD -MF build/Main/src/chessboard.d -Iinclude -o build/Main/src/chessboard.o src/chessboard.cpp
