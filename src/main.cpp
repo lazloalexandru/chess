@@ -8,7 +8,7 @@ using chrono::milliseconds;
 
 void test_move_generator()
 {
-    ChessBoard board = ChessBoard::create_test_board();
+    ChessBoard board = ChessBoard::create_initialized_board();
 
     vector<Move> moves;
     vector<vector<Move>> closed_routs;
@@ -16,17 +16,27 @@ void test_move_generator()
 
     auto start = chrono::steady_clock::now();
 
-    ChessBoard::move_generator(board, 1, moves, closed_routs, open_routs);
+    ChessBoard::move_generator(board, 0, moves, closed_routs, open_routs, 5);
 
     auto duration = chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - start).count();
     cout << "Elapsed time in milliseconds: " << duration << " ms\n";
 
-    ChessBoard::playback(closed_routs[459], board);
+    board.show();
+    ChessBoard::playback(closed_routs[0], board);
 
 }
 
-int main() {
-    test_move_generator();
+int main() {    
+    ChessBoard b;
+    vector<ChessBoard> v;
+    v.reserve(100);
+    v.push_back(b);
+    v.push_back(b);
+    v.push_back(b);
+
+    cout << "Chessboard Size: " << sizeof(b) << " bytes" << endl;
     
+    test_move_generator();
+
     return 0;
 }

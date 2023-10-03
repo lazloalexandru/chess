@@ -9,33 +9,12 @@ using namespace std;
 
 ChessBoard::ChessBoard() {
     memset(table, 0x0, sizeof(table));
-    num_pieces.resize(FieldContent::Last + 1); 
-    num_pieces[Empty] = 64;
 }
 
-ChessBoard::ChessBoard(const ChessBoard& other) {
-    for (unsigned char i = 0; i < SIZE; ++i) {
-        for (unsigned char j = 0; j < SIZE; ++j) {
-            table[i][j] = other.table[i][j];
-        }
-    }
-
-    num_pieces = other.num_pieces;
-}
-
-void ChessBoard::print_num_pieces() const
-{
-    cout << "Piece count: ";
-    for (byte piece_count : num_pieces)
-    {
-        cout << dec <<  ((int)piece_count) << " ";
-    }
-    cout << endl;
-}
 
 bool ChessBoard::is_game_over() const
 {
-    return (num_pieces[wKing] == 0) && ((num_pieces[bKing] > 0));
+    return false;
 }
     
 
@@ -46,9 +25,6 @@ void ChessBoard::move(byte r1, byte c1, byte r2, byte c2)
 
     set(r1,c1, FieldContent::Empty);
     set(r2,c2, f1);
-
-    num_pieces[Empty]++;
-    num_pieces[f2]--;
 }
 
 void ChessBoard::show() const
@@ -97,6 +73,31 @@ void ChessBoard::show() const
     }
 }
 
+inline void ChessBoard::set(byte row, byte column, byte content) 
+{
+    table[row][column] = content;
+
+    switch (content)
+    {
+    case wKing:
+        {
+            w_king_pos_r = row;            
+            w_king_pos_c = column;
+            //cout << "WKing (" << (int)row << "," << (int)column << ") -> " << (int)content << "\n";
+            break;
+        }
+    case bKing:
+        {
+            b_king_pos_r = row;
+            b_king_pos_c = column;
+            //cout << "BKing (" << (int)row << "," << (int)column << ") -> " << (int)content << "\n";            
+            break;
+        }
+    default:
+        break;
+    }
+}
+
 bool ChessBoard::put(byte row, byte column, FieldContent content)
 {
     row = row - 'A';
@@ -104,11 +105,8 @@ bool ChessBoard::put(byte row, byte column, FieldContent content)
     bool result = false;
 
     byte val = get(row, column);
-    num_pieces[val]--;
 
-    // cout << "Set (" << (int)row << "," << (int)column << ") -> " << (int)content << "\n";
     set(row, column, content);
-    num_pieces[content]++;
 
     return result;
 }
@@ -136,6 +134,46 @@ bool ChessBoard::is_clear_path(byte r1, byte c1, byte r2, byte c2) const
 
 bool ChessBoard::is_check_for(byte color) const
 {
+    byte rk, ck;
+
+    if (color & 0x1)
+    {
+        rk = b_king_pos_r;
+        ck = b_king_pos_c;
+    }
+    else
+    {
+        rk = w_king_pos_r;
+        ck = w_king_pos_c;
+    }
+
+    color = (~color) & 0x1;
+    
+    for (int r=0; r<ChessBoard::SIZE; r++)
+    {
+        for (int c=0; c<ChessBoard::SIZE; c++)
+        {
+            byte field = get(r,c);
+
+            if (field != Empty)
+            {
+                if ((color & 0x1) == (field & 0x1))
+                {
+                    if (is_valid_move(r,c,rk,ck))
+                    {
+                        Move m(r,c,rk,ck,0,0,0);
+                        /*
+                        cout << "      ";
+                        print_move(m);
+                        cout << " Check\n";
+                        */
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
     return false;
 }
 
@@ -239,15 +277,6 @@ bool ChessBoard::is_valid_move(byte r1, byte c1, byte r2, byte c2) const
         break;
     }
 
-    ChessBoard board = *this;
-    board.move(r1,c1,r2,c2);
-
-    if (board.is_check_for(field1 & 0x1))
-    {
-        return false;
-    }
-
-
     return true;
 }
 
@@ -264,7 +293,6 @@ ChessBoard ChessBoard::create_initialized_board()
     board.put('A', 7, FieldContent::wKnight);
     board.put('A', 8, FieldContent::wRook);
     
-
     board.put('B', 1 , FieldContent::wPawn);
     board.put('B', 2 , FieldContent::wPawn);
     board.put('B', 3 , FieldContent::wPawn);
@@ -295,10 +323,11 @@ ChessBoard ChessBoard::create_initialized_board()
     return board;
 }
 
-ChessBoard ChessBoard::create_test_board()
+ChessBoard ChessBoard::create_test_board1()
 {
     ChessBoard board;
 
+    board.put('B', 6, FieldContent::wRook);
     board.put('B', 5, FieldContent::wKing);
     board.put('C', 4 , FieldContent::wPawn);
     board.put('C', 5 , FieldContent::wPawn);
@@ -311,54 +340,98 @@ ChessBoard ChessBoard::create_test_board()
     return board;
 }
 
+
+ChessBoard ChessBoard::create_test_board2()
+{
+    ChessBoard board;
+
+    board.put('A', 7, FieldContent::wRook);
+    board.put('B', 6, FieldContent::wRook);
+    board.put('B', 5, FieldContent::wKing);
+    
+    board.put('E', 8, FieldContent::bKing);
+
+    return board;
+}
+
+
 void ChessBoard::move_generator(
-    ChessBoard board, 
+    ChessBoard initial_board, 
     byte move_color, 
     vector<Move>& moves, 
     vector<vector<Move>>& closed_routs, 
     vector<vector<Move>>& open_routs, 
-    byte depth)
+    byte max_depth)
 {
-    if (board.is_game_over())
-    {
-        vector<Move> route = moves;
+    unsigned long MAX_STATES = 100000000;
 
-        cout << closed_routs.size() << ". ";
-        print_route(route);
-        cout << " - Game over! \n";
+    cout << endl <<  "Move generator ... " << endl;
 
-        closed_routs.push_back(route);
-    }
-    else
+    vector<ChessBoard> bv;
+    bv.reserve(MAX_STATES);
+
+    vector<Move> mv;
+    mv.reserve(MAX_STATES);
+
+    byte step = 0;
+    
+    bv.push_back(initial_board);
+    mv.push_back(Move(0,0,0,0,step,(~move_color) & 0x1,0));
+
+
+    unsigned long i = 0;
+    while (i < bv.size() && step < max_depth)
     {
-        if (depth < 5)
+        ChessBoard board = bv.at(i);
+        Move move = mv.at(i);
+
+        cout << i << " step(" << (int)step << " - " << (int)move.step << ") - " << " color: " << (int)move_color << " ";
+        print_move(move);
+        cout << " " << endl;
+
+        if (move.step == step)
         {
-            long num_moves = 0;
+            bool move_made = false;
 
-            for (int r1=0; r1<8; r1++)
+            for (int r1=0; r1<ChessBoard::SIZE; r1++)
             {
-                for (int c1=0; c1<8; c1++)
+                for (int c1=0; c1<ChessBoard::SIZE; c1++)
                 {
-                    byte f = board.get(r1,c1);
+                    byte field = board.get(r1,c1);
 
-                    if (f != Empty)
+                    if (field != Empty)
                     {
-                        if ((move_color & 0x1) == (board.get(r1,c1) & 0x1))
+                        if ((move_color & 0x1) == (field & 0x1))
                         {
-                            for (int r2=0; r2<8; r2++)
+                            for (int r2=0; r2<ChessBoard::SIZE; r2++)
                             {
-                                for (int c2=0; c2<8; c2++)
+                                for (int c2=0; c2<ChessBoard::SIZE; c2++)
                                 {
-                                    if (board.is_valid_move(r1,c1,r2,c2))
+                                    if (mv.size() < MAX_STATES)
                                     {
-                                        moves.push_back(Move(r1,c1,r2,c2));
+                                        if (board.is_valid_move(r1,c1,r2,c2))
+                                        {
+                                            ChessBoard new_board = board;
+                                            new_board.move(r1,c1,r2,c2);
 
-                                        ChessBoard new_board = board;
-                                        new_board.move(r1,c1,r2,c2);
+                                            if (!new_board.is_check_for(move_color))
+                                            {
+                                                Move m = Move(r1,c1,r2,c2,step+1,move_color,i);
+                                                mv.push_back(m);
+                                                bv.push_back(new_board);
 
-                                        move_generator(new_board, ~move_color, moves, closed_routs, open_routs, depth + 1);
+                                                cout << "    " << mv.size() << " step(" << (int)(step + 1) << ") - " << " color: " << (int)move_color;
+                                                cout << "    ";
+                                                print_move(m);
+                                                cout << endl;
 
-                                        moves.pop_back();
+                                                move_made = true;
+                                            }
+                                        }
+                                    }                                    
+                                    else
+                                    {
+                                        cout << "Warning: Max capacity reached while searching!" << endl;
                                     }
                                 }
                             }
@@ -366,24 +439,50 @@ void ChessBoard::move_generator(
                     }
                 }
             }
+
+            if (!move_made)
+            {
+                cout << "      Game Over XXXXXXXXXXXXXXXXXXXX" << endl;
+
+                vector<Move> moves;
+                moves.push_back(move);
+                unsigned long prev_move_index = move.origin;
+
+                while (prev_move_index > 0)
+                {
+                    move = mv[prev_move_index];
+                    moves.push_back(move);
+                    prev_move_index = move.origin;
+                }
+
+                print_route(moves);
+                closed_routs.push_back(moves);
+                cout << endl;
+            }
+
+            i++;
         }
         else
         {
-            vector<Move> route = moves;
-            open_routs.push_back(route);
+            step++;
+            move_color = 0x1&(~move_color);
         }
     }
+
+    cout << "Move generator ... exit" << endl;
 }
+
 
 void ChessBoard::print_move(Move move)
 {
-    cout << (char)('A'+move.r1) << (int)move.c1 << "->" << (char)('A'+move.r2) << (int)move.c2;
+    cout << (char)('A'+move.r1) << (int)(move.c1+1) << "->" << (char)('A'+move.r2) << (int)(move.c2+1);
 }
 
 void ChessBoard::print_route(vector<Move> route)
 {
     for (const auto &move : route) {
         print_move(move);
+        cout << " ";
     }
 }
 
@@ -393,7 +492,7 @@ void ChessBoard::save_to_file(string filename, vector<vector<Move>>& routs)
 
     for (const auto &rout : routs) {
         for (const auto &move : rout) {
-            ss << "  " << (char)('A'+move.r1) << (int)move.c1 << "->" << (char)('A'+move.r2) << (int)move.c2;
+            ss << "  " << (char)('A'+move.r1) << (int)(move.c1+1) << "->" << (char)('A'+move.r2) << (int)(move.c2+1);
         }
         ss << "\n";
     }

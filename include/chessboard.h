@@ -43,19 +43,18 @@ public:
     static constexpr unsigned char SIZE = 8;
 private:    
     byte table[SIZE][SIZE];
-    std::vector<byte> num_pieces;
-
+    byte w_king_pos_r;
+    byte w_king_pos_c;
+    byte b_king_pos_r;
+    byte b_king_pos_c;
+    
 private:
 
-    inline void set(byte row, byte column, byte content) 
-    {
-        table[row][column] = content;
-    }
+    inline void set(byte row, byte column, byte content);
 
 public:
     
     ChessBoard();
-    ChessBoard(const ChessBoard& r);
 
     bool is_clear_path(byte r1, byte c1, byte r2, byte c2) const;
     bool is_valid_move(byte r1, byte c1, byte r2, byte c2) const;
@@ -65,7 +64,6 @@ public:
     bool put(byte row, byte column, FieldContent content);
     void move(byte r1, byte c1, byte r2, byte c2);
 
-    void print_num_pieces() const;
     void show() const;
     
     inline byte get(byte row, byte column) const
@@ -76,7 +74,8 @@ public:
 public:
 
     static ChessBoard create_initialized_board();
-    static ChessBoard create_test_board();
+    static ChessBoard create_test_board1();
+    static ChessBoard create_test_board2();
     
     static void move_generator(
         ChessBoard board, 
@@ -84,7 +83,7 @@ public:
         vector<Move>& moves, 
         vector<vector<Move>>& closed_routs, 
         vector<vector<Move>>& open_routs, 
-        byte depth = 0
+        byte max_depth = 3
     );
 
     static void print_move(Move move);
