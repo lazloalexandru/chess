@@ -1,8 +1,8 @@
-  A4->E8  G7->E7  B5->C5  G6->E6
-  A4->E8  G7->E7  B5->D5  G6->E6
-  A4->E8  G7->E7  B5->C5  G6->F6
-  A4->E8  G7->E7  B5->D5  G6->F6
-  A4->E8  G6->E6  B5->C5  G7->E7
-  A4->E8  G6->F6  B5->C5  G7->E7
-  A4->E8  G6->E6  B5->D5  G7->E7
-  A4->E8  G6->F6  B5->D5  G7->E7
+  G6->E6  B5->C5  G7->E7  A4->E8
+  G6->E6  B5->D5  G7->E7  A4->E8
+  G6->F6  B5->C5  G7->E7  A4->E8
+  G6->F6  B5->D5  G7->E7  A4->E8
+  G7->E7  B5->C5  G6->E6  A4->E8
+  G7->E7  B5->C5  G6->F6  A4->E8
+  G7->E7  B5->D5  G6->E6  A4->E8
+  G7->E7  B5->D5  G6->F6  A4->E8

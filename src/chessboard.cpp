@@ -536,8 +536,9 @@ void ChessBoard::save_to_file(string filename, const vector<vector<Move>>& routs
 {
     stringstream ss;
 
-    for (const auto &rout : routs) {
-        for (const auto &move : rout) {
+    for (const auto &route : routs) {
+        for(auto it = route.rbegin(); it != route.rend(); ++it) {
+            auto move = *it;
             ss << "  " << (char)('A'+move.r1) << (int)(move.c1+1) << "->" << (char)('A'+move.r2) << (int)(move.c2+1);
         }
         ss << "\n";
