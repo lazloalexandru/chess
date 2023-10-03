@@ -323,6 +323,49 @@ ChessBoard ChessBoard::create_initialized_board()
     return board;
 }
 
+ChessBoard ChessBoard::create_test_board3()
+{
+    ChessBoard board;
+
+    board.put('A', 1, FieldContent::wRook);
+    board.put('A', 2, FieldContent::wKnight);
+    board.put('A', 3, FieldContent::wBishop);
+    board.put('A', 4, FieldContent::wQueen);    
+    board.put('A', 5, FieldContent::wKing);
+    board.put('A', 6, FieldContent::wBishop);
+    board.put('A', 7, FieldContent::wKnight);
+    board.put('A', 8, FieldContent::wRook);
+    
+    board.put('B', 1 , FieldContent::wPawn);
+    board.put('B', 2 , FieldContent::wPawn);
+    board.put('B', 3 , FieldContent::wPawn);
+    board.put('B', 4 , FieldContent::wPawn);
+    board.put('C', 5 , FieldContent::wPawn);
+    board.put('B', 6 , FieldContent::wPawn);
+    board.put('B', 7 , FieldContent::wPawn);
+    board.put('B', 8 , FieldContent::wPawn);
+    
+    board.put('G', 1, FieldContent::bPawn);
+    board.put('G', 2, FieldContent::bPawn);
+    board.put('G', 3, FieldContent::bPawn);
+    board.put('G', 4, FieldContent::bPawn);
+    board.put('G', 5, FieldContent::bPawn);
+    board.put('G', 6, FieldContent::bPawn);
+    board.put('E', 7, FieldContent::bPawn);
+    board.put('G', 8, FieldContent::bPawn);
+
+    board.put('H', 1, FieldContent::bRook);
+    board.put('H', 2, FieldContent::bKnight);
+    board.put('H', 3, FieldContent::bBishop);
+    board.put('H', 4, FieldContent::bQueen);    
+    board.put('H', 5, FieldContent::bKing);
+    board.put('H', 6, FieldContent::bBishop);
+    board.put('H', 7, FieldContent::bKnight);
+    board.put('H', 8, FieldContent::bRook);
+
+    return board;
+}
+
 ChessBoard ChessBoard::create_test_board1()
 {
     ChessBoard board;
@@ -383,10 +426,11 @@ void ChessBoard::move_generator(
     {
         ChessBoard board = bv.at(i);
         Move move = mv.at(i);
-
+        /*
         cout << i << " step(" << (int)step << " - " << (int)move.step << ") - " << " color: " << (int)move_color << " ";
         print_move(move);
         cout << " " << endl;
+        */
 
         if (move.step == step)
         {
@@ -418,11 +462,12 @@ void ChessBoard::move_generator(
                                                 Move m = Move(r1,c1,r2,c2,step+1,move_color,i);
                                                 mv.push_back(m);
                                                 bv.push_back(new_board);
-
-                                                cout << "    " << mv.size() << " step(" << (int)(step + 1) << ") - " << " color: " << (int)move_color;
+                                                /*
+                                                cout << "    " << mv.size()-1 << " step(" << (int)(step + 1) << ") - " << " color: " << (int)move_color;
                                                 cout << "    ";
                                                 print_move(m);
                                                 cout << endl;
+                                                */
 
                                                 move_made = true;
                                             }
@@ -441,8 +486,6 @@ void ChessBoard::move_generator(
 
             if (!move_made)
             {
-                cout << "      Game Over XXXXXXXXXXXXXXXXXXXX" << endl;
-
                 vector<Move> moves;
                 moves.push_back(move);
                 unsigned long prev_move_index = move.origin;
@@ -453,10 +496,13 @@ void ChessBoard::move_generator(
                     moves.push_back(move);
                     prev_move_index = move.origin;
                 }
-
-                print_route(moves);
+                
                 closed_routs.push_back(moves);
-                cout << endl;
+
+                /*
+                print_route(moves);                
+                cout << "Game Over" << endl;
+                */
             }
 
             i++;
@@ -479,7 +525,8 @@ void ChessBoard::print_move(Move move)
 
 void ChessBoard::print_route(vector<Move> route)
 {
-    for (const auto &move : route) {
+    for(auto it = route.rbegin(); it != route.rend(); ++it) {
+        auto move = *it;
         print_move(move);
         cout << " ";
     }

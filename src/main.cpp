@@ -15,7 +15,7 @@ void test_move_generator()
 
     auto start = chrono::steady_clock::now();
 
-    ChessBoard::move_generator(board, 0, closed_routs, open_routs, 5);
+    ChessBoard::move_generator(board, 1, closed_routs, open_routs, 5);
 
     auto duration = chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - start).count();
     cout << "Elapsed time in milliseconds: " << duration << " ms\n";

@@ -76,6 +76,7 @@ public:
     static ChessBoard create_initialized_board();
     static ChessBoard create_test_board1();
     static ChessBoard create_test_board2();
+    static ChessBoard create_test_board3();
     
     static void move_generator(
         ChessBoard board, 
