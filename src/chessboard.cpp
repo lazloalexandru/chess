@@ -512,7 +512,9 @@ void ChessBoard::playback(vector<Move> rout, ChessBoard board)
     cout << "\n-------------GAME----------------\n\n";
     board.show();
 
-    for (const auto &move : rout) {
+    for(auto it = rout.rbegin(); it != rout.rend(); ++it) {
+        auto move = *it;
+    
         ChessBoard::print_move(move);
         cout << endl;
         board.move(move.r1, move.c1, move.r2, move.c2);
