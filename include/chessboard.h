@@ -80,7 +80,6 @@ public:
     static void move_generator(
         ChessBoard board, 
         byte move_color, 
-        vector<Move>& moves, 
         vector<vector<Move>>& closed_routs, 
         vector<vector<Move>>& open_routs, 
         byte max_depth = 3
@@ -89,7 +88,7 @@ public:
     static void print_move(Move move);
     static void print_route(vector<Move> route);
     static void playback(vector<Move> rout, ChessBoard board);
-    void save_to_file(string filename, vector<vector<Move>>& routs);
+    static void save_to_file(string filename, const vector<vector<Move>>& routs);
 };
 
 #endif

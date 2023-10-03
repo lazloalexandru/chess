@@ -358,12 +358,11 @@ ChessBoard ChessBoard::create_test_board2()
 void ChessBoard::move_generator(
     ChessBoard initial_board, 
     byte move_color, 
-    vector<Move>& moves, 
     vector<vector<Move>>& closed_routs, 
     vector<vector<Move>>& open_routs, 
     byte max_depth)
 {
-    unsigned long MAX_STATES = 100000000;
+    unsigned long MAX_STATES = 10000000;
 
     cout << endl <<  "Move generator ... " << endl;
 
@@ -486,7 +485,7 @@ void ChessBoard::print_route(vector<Move> route)
     }
 }
 
-void ChessBoard::save_to_file(string filename, vector<vector<Move>>& routs)
+void ChessBoard::save_to_file(string filename, const vector<vector<Move>>& routs)
 {
     stringstream ss;
 
