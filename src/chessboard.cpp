@@ -166,11 +166,6 @@ bool ChessBoard::is_check_for(byte color) const
                     if (is_valid_move(r,c,rk,ck))
                     {
                         Move m(r,c,rk,ck,0,0,0);
-                        /*
-                        cout << "      ";
-                        print_move(m);
-                        cout << " Check\n";
-                        */
                         return true;
                     }
                 }
