@@ -405,7 +405,7 @@ void ChessBoard::move_generator(
     vector<vector<Move>>& open_routs, 
     byte max_depth)
 {
-    unsigned long MAX_STATES = 20000000;
+    unsigned long MAX_STATES = 50000000;
     
     static unsigned int Mb = 1024*1024;
 
