@@ -52,9 +52,10 @@ private:
 
     inline void set(byte row, byte column, byte content);
 
-public:
-    
-    ChessBoard();
+    inline byte get(byte row, byte column) const
+    {
+        return table[row][column];
+    }
 
     bool is_clear_path(byte r1, byte c1, byte r2, byte c2) const;
     bool is_valid_move(byte r1, byte c1, byte r2, byte c2) const;
@@ -64,12 +65,11 @@ public:
     bool put(byte row, byte column, FieldContent content);
     void move(byte r1, byte c1, byte r2, byte c2);
 
-    void show() const;
+public:
     
-    inline byte get(byte row, byte column) const
-    {
-        return table[row][column];
-    }
+    ChessBoard();
+
+    void show() const;
 
 public:
 
