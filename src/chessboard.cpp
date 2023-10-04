@@ -153,9 +153,9 @@ bool ChessBoard::is_check_for(byte color) const
 
     color = (~color) & 0x1;
     
-    for (int r=0; r<ChessBoard::SIZE; r++)
+    for (byte r=0; r<ChessBoard::SIZE; r++)
     {
-        for (int c=0; c<ChessBoard::SIZE; c++)
+        for (byte c=0; c<ChessBoard::SIZE; c++)
         {
             byte field = get(r,c);
 
@@ -445,9 +445,9 @@ void ChessBoard::move_generator(
         {
             bool move_made = false;
 
-            for (int r1=0; r1<ChessBoard::SIZE; r1++)
+            for (byte r1=0; r1<ChessBoard::SIZE; r1++)
             {
-                for (int c1=0; c1<ChessBoard::SIZE; c1++)
+                for (byte c1=0; c1<ChessBoard::SIZE; c1++)
                 {
                     byte field = board.get(r1,c1);
 
@@ -455,9 +455,9 @@ void ChessBoard::move_generator(
                     {
                         if ((move_color & 0x1) == (field & 0x1))
                         {
-                            for (int r2=0; r2<ChessBoard::SIZE; r2++)
+                            for (byte r2=0; r2<ChessBoard::SIZE; r2++)
                             {
-                                for (int c2=0; c2<ChessBoard::SIZE; c2++)
+                                for (byte c2=0; c2<ChessBoard::SIZE; c2++)
                                 {
                                     if (mv.size() < MAX_STATES)
                                     {
@@ -492,6 +492,7 @@ void ChessBoard::move_generator(
                         }
                     }
                 }
+
             }
 
             if (!move_made)
