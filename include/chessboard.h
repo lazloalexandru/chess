@@ -42,21 +42,16 @@ class ChessBoard {
 public:
     static constexpr unsigned char SIZE = 8;
 private:    
-    byte table[SIZE][SIZE];
-    byte w_king_pos_r;
-    byte w_king_pos_c;
-    byte b_king_pos_r;
-    byte b_king_pos_c;
+    long table[SIZE];
+    byte w_king_pos;
+    byte b_king_pos;
     
 private:
 
     inline void set(byte row, byte column, byte content);
 
-    inline byte get(byte row, byte column) const
-    {
-        return table[row][column];
-    }
-
+    inline byte get(byte row, byte column) const;
+    
     bool is_clear_path(byte r1, byte c1, byte r2, byte c2) const;
     bool is_valid_move(byte r1, byte c1, byte r2, byte c2) const;
     bool is_check_for(byte color) const;

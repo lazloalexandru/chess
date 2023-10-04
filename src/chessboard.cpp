@@ -44,7 +44,7 @@ void ChessBoard::show() const
 
         for (int j=0; j<SIZE; j++)
         {
-            byte field = table[i][j];
+            byte field = get(i,j);
             byte piece = field >> 1;
 
             string color;
@@ -73,23 +73,27 @@ void ChessBoard::show() const
     }
 }
 
+inline byte ChessBoard::get(byte row, byte column) const
+{
+    return (table[row] >> (4 * column)) & 0xF;
+}
+
 inline void ChessBoard::set(byte row, byte column, byte content) 
 {
-    table[row][column] = content;
+    unsigned long mask = ~(0xF << (column * 4));
+    table[row] = (table[row] & mask) | (content & 0xF) << (column * 4);
 
     switch (content)
     {
     case wKing:
         {
-            w_king_pos_r = row;            
-            w_king_pos_c = column;
+            w_king_pos = ((row & 0xF) << 4) | (column & 0xF);
             //cout << "WKing (" << (int)row << "," << (int)column << ") -> " << (int)content << "\n";
             break;
         }
     case bKing:
         {
-            b_king_pos_r = row;
-            b_king_pos_c = column;
+            b_king_pos = ((row & 0xF) << 4) | (column & 0xF);
             //cout << "BKing (" << (int)row << "," << (int)column << ") -> " << (int)content << "\n";            
             break;
         }
@@ -123,7 +127,7 @@ bool ChessBoard::is_clear_path(byte r1, byte c1, byte r2, byte c2) const
     c1 += vc;
     while (r1 != r2 || c1 != c2)
     {
-        if (table[r1][c1]!=Empty) { return false; }
+        if (get(r1,c1)!=Empty) { return false; }
 
         r1 += vr;
         c1 += vc;    
@@ -138,13 +142,13 @@ bool ChessBoard::is_check_for(byte color) const
 
     if (color & 0x1)
     {
-        rk = b_king_pos_r;
-        ck = b_king_pos_c;
+        rk = (b_king_pos >> 4) & 0xF;
+        ck = b_king_pos & 0xF;
     }
     else
     {
-        rk = w_king_pos_r;
-        ck = w_king_pos_c;
+        rk = (w_king_pos >> 4) & 0xF;
+        ck = w_king_pos & 0xF;
     }
 
     color = (~color) & 0x1;
@@ -201,7 +205,7 @@ bool ChessBoard::is_valid_move(byte r1, byte c1, byte r2, byte c2) const
     {
         if (r2==r1+1 && c2==c1 && field2==Empty) {}
         else if (r2==r1+1 && abs(c2-c1)==1 && field2 != Empty) {}
-        else if (r1==1 && (r2==r1+2) && c1==c2 && field2==Empty && table[r1+1][c1]==Empty) {}
+        else if (r1==1 && (r2==r1+2) && c1==c2 && field2==Empty && get(r1+1,c1)==Empty) {}
         else { return false; }
         break;
     }
@@ -209,7 +213,7 @@ bool ChessBoard::is_valid_move(byte r1, byte c1, byte r2, byte c2) const
     {
         if (r2==r1-1 && c2==c1 && field2==Empty) {}
         else if (r2==r1-1 && abs(c2-c1)==1 && field2 != Empty) {}
-        else if (r1==6 && (r2==r1-2) && c1==c2 && field2==Empty && table[r1-1][c1]==Empty) {}
+        else if (r1==6 && (r2==r1-2) && c1==c2 && field2==Empty && get(r1-1,c1)==Empty) {}
         else { return false; }
         break;
     }
