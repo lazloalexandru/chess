@@ -3,6 +3,7 @@
 
 #include "utils.h"
 
+// REFACTOR to use 3,3,3,3 bits for pos, 3 bits for step, 1 bit for color
 struct Move {
     byte r1, c1, r2, c2;
     byte step;

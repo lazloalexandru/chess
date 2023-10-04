@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <iomanip>
 #include "chessboard.h"
 #include "move.h"
 
@@ -327,18 +328,18 @@ ChessBoard ChessBoard::create_test_board3()
     ChessBoard board;
 
     board.put('A', 1, FieldContent::wRook);
-    board.put('A', 2, FieldContent::wKnight);
+    board.put('C', 3, FieldContent::wKnight);
     board.put('A', 3, FieldContent::wBishop);
     board.put('A', 4, FieldContent::wQueen);    
     board.put('A', 5, FieldContent::wKing);
     board.put('A', 6, FieldContent::wBishop);
-    board.put('A', 7, FieldContent::wKnight);
+    board.put('C', 6, FieldContent::wKnight);
     board.put('A', 8, FieldContent::wRook);
     
     board.put('B', 1 , FieldContent::wPawn);
     board.put('B', 2 , FieldContent::wPawn);
     board.put('B', 3 , FieldContent::wPawn);
-    board.put('B', 4 , FieldContent::wPawn);
+    board.put('D', 4 , FieldContent::wPawn);
     board.put('C', 5 , FieldContent::wPawn);
     board.put('B', 6 , FieldContent::wPawn);
     board.put('B', 7 , FieldContent::wPawn);
@@ -347,19 +348,19 @@ ChessBoard ChessBoard::create_test_board3()
     board.put('G', 1, FieldContent::bPawn);
     board.put('G', 2, FieldContent::bPawn);
     board.put('G', 3, FieldContent::bPawn);
-    board.put('G', 4, FieldContent::bPawn);
-    board.put('G', 5, FieldContent::bPawn);
+    board.put('E', 4, FieldContent::bPawn);
+    board.put('F', 5, FieldContent::bPawn);
     board.put('G', 6, FieldContent::bPawn);
-    board.put('E', 7, FieldContent::bPawn);
+    board.put('G', 7, FieldContent::bPawn);
     board.put('G', 8, FieldContent::bPawn);
 
     board.put('H', 1, FieldContent::bRook);
-    board.put('H', 2, FieldContent::bKnight);
+    board.put('F', 3, FieldContent::bKnight);
     board.put('H', 3, FieldContent::bBishop);
     board.put('H', 4, FieldContent::bQueen);    
     board.put('H', 5, FieldContent::bKing);
     board.put('H', 6, FieldContent::bBishop);
-    board.put('H', 7, FieldContent::bKnight);
+    board.put('F', 6, FieldContent::bKnight);
     board.put('H', 8, FieldContent::bRook);
 
     return board;
@@ -404,7 +405,7 @@ void ChessBoard::move_generator(
     vector<vector<Move>>& open_routs, 
     byte max_depth)
 {
-    unsigned long MAX_STATES = 10000000;
+    unsigned long MAX_STATES = 20000000;
     
     static unsigned int Mb = 1024*1024;
 
@@ -418,7 +419,7 @@ void ChessBoard::move_generator(
     vector<Move> mv;
     mv.reserve(MAX_STATES);
 
-    cout << endl <<  "Started ... " << endl;
+    cout << endl <<  "Started ";
     byte step = 0;
     
     bv.push_back(initial_board);
@@ -463,12 +464,15 @@ void ChessBoard::move_generator(
                                                 bv.push_back(new_board);
 
                                                 move_made = true;
+
+                                                if ((mv.size() % 1000000) == 0) cout << "." << std::flush;
                                             }
                                         }
                                     }                                    
                                     else
                                     {
-                                        cout << "Warning: Max capacity reached while searching!" << endl;
+                                        cout << " " << std::fixed << std::setprecision(2) << (mv.size() / 1000000) << "M states" << endl;
+                                        cout << "\nWarning: Max capacity reached while searching!" << endl;
                                         return;
                                     }
                                 }
@@ -504,6 +508,7 @@ void ChessBoard::move_generator(
         }
     }
 
+    cout << " " << std::fixed << std::setprecision(2) << (mv.size() / 1000000) << "M states" << endl;
     cout << "Move generator ... exit" << endl;
 }
 
