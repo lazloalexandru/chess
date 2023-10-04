@@ -407,13 +407,19 @@ void ChessBoard::move_generator(
 {
     unsigned long MAX_STATES = 10000000;
 
+    static unsigned int Mb = 1024*1024;
+
     cout << endl <<  "Move generator ... " << endl;
+    cout << "Allocating " << (long) ((MAX_STATES * sizeof(ChessBoard)) / Mb) << "Mb for board." << endl;
+    cout << "Allocating " << (long) ((MAX_STATES * sizeof(Move)) / Mb) << "Mb for moves." << endl;
 
     vector<ChessBoard> bv;
     bv.reserve(MAX_STATES);
 
     vector<Move> mv;
     mv.reserve(MAX_STATES);
+
+    cout << endl <<  "Started ... " << endl;
 
     byte step = 0;
     
