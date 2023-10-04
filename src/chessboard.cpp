@@ -435,11 +435,6 @@ void ChessBoard::move_generator(
     {
         ChessBoard board = bv.at(i);
         Move move = mv.at(i);
-        /*
-        cout << i << " step(" << (int)step << " - " << (int)move.step << ") - " << " color: " << (int)move_color << " ";
-        print_move(move);
-        cout << " " << endl;
-        */
 
         if (move.step == step)
         {
@@ -471,12 +466,6 @@ void ChessBoard::move_generator(
                                                 Move m = Move(r1,c1,r2,c2,step+1,move_color,i);
                                                 mv.push_back(m);
                                                 bv.push_back(new_board);
-                                                /*
-                                                cout << "    " << mv.size()-1 << " step(" << (int)(step + 1) << ") - " << " color: " << (int)move_color;
-                                                cout << "    ";
-                                                print_move(m);
-                                                cout << endl;
-                                                */
 
                                                 move_made = true;
                                             }
@@ -509,11 +498,6 @@ void ChessBoard::move_generator(
                 }
                 
                 closed_routs.push_back(moves);
-
-                /*
-                print_route(moves);                
-                cout << "Game Over" << endl;
-                */
             }
 
             i++;
