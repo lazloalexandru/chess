@@ -410,8 +410,12 @@ void ChessBoard::move_generator(
     byte max_depth)
 {
     unsigned long MAX_STATES = 10000000;
+    
+    static unsigned int Mb = 1024*1024;
 
     cout << endl <<  "Move generator ... " << endl;
+    cout << "Allocating " << (long) ((MAX_STATES * sizeof(ChessBoard)) / Mb) << "Mb for board." << endl;
+    cout << "Allocating " << (long) ((MAX_STATES * sizeof(Move)) / Mb) << "Mb for moves." << endl;
 
     vector<ChessBoard> bv;
     bv.reserve(MAX_STATES);
@@ -419,6 +423,7 @@ void ChessBoard::move_generator(
     vector<Move> mv;
     mv.reserve(MAX_STATES);
 
+    cout << endl <<  "Started ... " << endl;
     byte step = 0;
     
     bv.push_back(initial_board);
@@ -480,6 +485,7 @@ void ChessBoard::move_generator(
                                     else
                                     {
                                         cout << "Warning: Max capacity reached while searching!" << endl;
+                                        return;
                                     }
                                 }
                             }

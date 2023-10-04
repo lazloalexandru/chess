@@ -42,7 +42,7 @@ class ChessBoard {
 public:
     static constexpr unsigned char SIZE = 8;
 private:    
-    long table[SIZE];
+    int table[SIZE];
     byte w_king_pos;
     byte b_king_pos;
     
