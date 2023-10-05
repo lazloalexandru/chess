@@ -1,6 +1,7 @@
 #ifndef MOVE_H
 #define MOVE_H
 
+#include <string>
 #include "utils.h"
 
 // REFACTOR to use 3,3,3,3 bits for pos, 3 bits for step, 1 bit for color
@@ -23,5 +24,7 @@ struct Move {
     {};
     
 };
+
+bool str_to_Move(std::string s, Move& out);
 
 #endif

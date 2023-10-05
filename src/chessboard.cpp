@@ -13,12 +13,6 @@ ChessBoard::ChessBoard() {
 }
 
 
-bool ChessBoard::is_game_over() const
-{
-    return false;
-}
-    
-
 void ChessBoard::move(byte r1, byte c1, byte r2, byte c2)
 {
     byte f1 = get(r1,c1);
@@ -171,6 +165,20 @@ bool ChessBoard::is_check_for(byte color) const
                     }
                 }
             }
+        }
+    }
+
+    return false;
+}
+
+bool ChessBoard::move(Move m)
+{
+    if ((m.color & 0x1)  == (get(m.r1, m.c1) & 0x1))
+    {
+        if (is_valid_move(m.r1, m.c1, m.r2, m.c2))
+        {
+            move(m.r1, m.c1, m.r2, m.c2);
+            return true;
         }
     }
 
@@ -408,18 +416,18 @@ void ChessBoard::move_generator(
     unsigned long MAX_STATES = 50000000;
     
     static unsigned int Mb = 1024*1024;
-
+    /*
     cout << endl <<  "Move generator ... " << endl;
     cout << "Allocating " << (long) ((MAX_STATES * sizeof(ChessBoard)) / Mb) << "Mb for board." << endl;
     cout << "Allocating " << (long) ((MAX_STATES * sizeof(Move)) / Mb) << "Mb for moves." << endl;
-
+    */
     vector<ChessBoard> bv;
     bv.reserve(MAX_STATES);
 
     vector<Move> mv;
     mv.reserve(MAX_STATES);
 
-    cout << endl <<  "Started ";
+    // cout << endl <<  "Analyzing moves ";
     byte step = 0;
     
     bv.push_back(initial_board);
@@ -508,14 +516,59 @@ void ChessBoard::move_generator(
         }
     }
 
+    /*
     cout << " " << std::fixed << std::setprecision(2) << (mv.size() / 1000000) << "M states" << endl;
     cout << "Move generator ... exit" << endl;
+    */
+}
+
+
+bool ChessBoard::is_game_over(byte color) const
+{
+
+    for (byte r1=0; r1<ChessBoard::SIZE; r1++)
+    {
+        for (byte c1=0; c1<ChessBoard::SIZE; c1++)
+        {
+            byte field = get(r1,c1);
+
+            if (field != Empty)
+            {
+                if ((color & 0x1) == (field & 0x1))
+                {
+                    for (byte r2=0; r2<ChessBoard::SIZE; r2++)
+                    {
+                        for (byte c2=0; c2<ChessBoard::SIZE; c2++)
+                        {
+                            if (is_valid_move(r1,c1,r2,c2))
+                            {
+                                ChessBoard new_board = *this;
+                                new_board.move(r1,c1,r2,c2);
+
+                                if (!new_board.is_check_for(color))
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    return true;
 }
 
 
 void ChessBoard::print_move(Move move)
 {
+    cout << (move.color ? white_black:black_black);
+
     cout << (char)('A'+move.r1) << (int)(move.c1+1) << "->" << (char)('A'+move.r2) << (int)(move.c2+1);
+
+    cout << ORIG_COLOR;
 }
 
 void ChessBoard::print_route(vector<Move> route)

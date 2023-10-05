@@ -55,7 +55,6 @@ private:
     bool is_clear_path(byte r1, byte c1, byte r2, byte c2) const;
     bool is_valid_move(byte r1, byte c1, byte r2, byte c2) const;
     bool is_check_for(byte color) const;
-    bool is_game_over() const;
 
     bool put(byte row, byte column, FieldContent content);
     void move(byte r1, byte c1, byte r2, byte c2);
@@ -67,6 +66,9 @@ public:
     void show() const;
 
 public:
+
+    bool move(Move m);
+    bool is_game_over(byte color) const;
 
     static ChessBoard create_initialized_board();
     static ChessBoard create_test_board1();

@@ -1,0 +1,1 @@
+g++ -c -MD -MF build/Main/src/move.d -Iinclude -o build/Main/src/move.o src/move.cpp

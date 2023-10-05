@@ -1,1 +1,1 @@
-g++ -o build/Main/chess build/Main/src/chessboard.o build/Main/src/main.o
+g++ -o build/Main/chess build/Main/src/chessboard.o build/Main/src/main.o build/Main/src/move.o
