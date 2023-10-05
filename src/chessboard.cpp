@@ -66,6 +66,15 @@ void ChessBoard::show() const
 
         cout << ORIG_COLOR << endl;
     }
+
+    cout << "  ";
+
+    for (int i=1; i<=SIZE; i++)
+    {
+        cout << i;
+    }
+
+    cout << endl;
 }
 
 inline byte ChessBoard::get(byte row, byte column) const
@@ -515,6 +524,7 @@ void ChessBoard::move_generator(
             move_color = 0x1&(~move_color);
         }
     }
+    cout << endl;
 
     /*
     cout << " " << std::fixed << std::setprecision(2) << (mv.size() / 1000000) << "M states" << endl;

@@ -77,7 +77,7 @@ void game_play()
         while (!valid_move)
         {
             string move_str;
-            cout << (color ? white_black:black_black) << "Enter Move:" << ORIG_COLOR;
+            cout << (color ? white_white:black_white) << "Enter Move:" << ORIG_COLOR;
             getline(cin, move_str);
     
             Move m;
