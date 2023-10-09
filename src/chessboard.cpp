@@ -186,8 +186,14 @@ bool ChessBoard::move(Move m)
     {
         if (is_valid_move(m.r1, m.c1, m.r2, m.c2))
         {
-            move(m.r1, m.c1, m.r2, m.c2);
-            return true;
+            ChessBoard new_board = *this;
+            new_board.move(m.r1,m.c1,m.r2,m.c2);
+
+            if (!new_board.is_check_for(m.color))
+            {
+                move(m.r1, m.c1, m.r2, m.c2);
+                return true;
+            }
         }
     }
 
@@ -345,7 +351,7 @@ ChessBoard ChessBoard::create_test_board3()
     ChessBoard board;
 
     board.put('A', 1, FieldContent::wRook);
-    board.put('C', 3, FieldContent::wKnight);
+    board.put('A', 2, FieldContent::wKnight);
     board.put('A', 3, FieldContent::wBishop);
     board.put('A', 4, FieldContent::wQueen);    
     board.put('A', 5, FieldContent::wKing);
@@ -376,7 +382,7 @@ ChessBoard ChessBoard::create_test_board3()
     board.put('H', 3, FieldContent::bBishop);
     board.put('H', 4, FieldContent::bQueen);    
     board.put('H', 5, FieldContent::bKing);
-    board.put('H', 6, FieldContent::bBishop);
+    board.put('D', 2, FieldContent::bBishop);
     board.put('F', 6, FieldContent::bKnight);
     board.put('H', 8, FieldContent::bRook);
 

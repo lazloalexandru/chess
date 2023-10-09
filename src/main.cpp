@@ -65,8 +65,8 @@ void show_danger_routes(const ChessBoard& b, byte color)
 
 void game_play()
 {
-    ChessBoard b = ChessBoard::create_initialized_board();
-    byte color = 1;
+    ChessBoard b = ChessBoard::create_test_board3();
+    byte color = 0;
     
     while (!b.is_game_over(color))
     {
